@@ -1,12 +1,26 @@
 const app = require('./app')
-const http = require('http');
-const Server = http.createServer(app);
+const server = require('http').createServer(app);
+const ExpressPeerServer = require('peer').ExpressPeerServer;
+
+const options = {
+  debug: true
+}
+
+if(options.debug) console.log("\n+++ PEER server running in debug mode +++");
+const peerServer = ExpressPeerServer(server, options);
+
+peerServer.on('connection', async id => {
+  console.log(id);
+});
+
+peerServer.on('disconnect', async id => {
+
+});
+
+app.use('/peerjs', peerServer);
 
 const PORT = 3001
-Server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
 
-module.exports = {
-  Server
-}
+server.listen(PORT, () => {
+  console.log(`\nWeb server running on port ${PORT}`)
+})
