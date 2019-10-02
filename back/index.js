@@ -3,7 +3,7 @@ const server = require('http').createServer(app);
 const ExpressPeerServer = require('peer').ExpressPeerServer;
 
 const options = {
-  debug: true
+  debug: false
 }
 
 if(options.debug) console.log("\n+++ PEER server running in debug mode +++");
@@ -14,7 +14,7 @@ peerServer.on('connection', async id => {
 });
 
 peerServer.on('disconnect', async id => {
-
+  console.log(id, "session ended")
 });
 
 app.use('/peerjs', peerServer);
