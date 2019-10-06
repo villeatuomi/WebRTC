@@ -23,7 +23,7 @@ const middleware = require('./utility/middleware')
 app.use(middleware.requestLogger)
 app.use(bodyParser.json())
 
-app.use('/t', express.static('../front/test-socket.html'));
+app.use('/', express.static('../front/test-socket.html'));
 
 app.use('/api', apiRouter)
 app.use('/', mainRouter)
