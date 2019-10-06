@@ -1,7 +1,8 @@
-const mR = require('express').Router()
+const main = require('express').Router()
 
-mR.get('*', async (req, res) => {
+main.get('*', async (req, res) => {
   res.status(404).send()
 })
 
-module.exports = mR
+
+module.exports = main
