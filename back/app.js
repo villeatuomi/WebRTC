@@ -26,7 +26,7 @@ app.use(bodyParser.json())
 app.use('/', express.static('../front/test-socket.html'));
 
 app.use('/api', apiRouter)
-app.use('/', mainRouter)
+app.use('', mainRouter)
 
 app.use(express.static('../front'))
 
