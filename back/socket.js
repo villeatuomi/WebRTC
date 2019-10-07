@@ -1,7 +1,16 @@
 const io = require('socket.io')();
 const PORT = require('./config').port.wss
 
-
+const showConnectedClients = (clients) => {
+  let i = 1
+  let text = `List of clients connected:\n`
+  clients.forEach(client => {
+    text += `-${i}- ${client}\n`;
+    i++
+  })
+  console.log(text);
+  console.log(`Overall Clients connected: ${clients.length}`)
+}
 
 
 // io methods are something server activates
@@ -15,12 +24,7 @@ io.on('connection', (socket) => {
 
     if (error) return console.log(error)
 
-    console.log(`List of clients connected:`);
-    let i = 0
-    clients.forEach(client => {
-      console.log(`-${i}- ${client}`);
-    })
-    console.log(`Overall Clients connected: ${clients.length}`)
+    showConnectedClients(clients)
 
     io.emit('users', clients); // This send list of IDs to all the clients.
     socket.emit('clientsFirstTime', clients); // This send a list of IDs only to the newly connected client.
@@ -35,8 +39,8 @@ io.on('connection', (socket) => {
     console.log(`--- ${socket.id} disconnected ---`);
 
     io.clients((error, clients) => {
-      if (error) throw error;
-      console.log(clients);
+      if (error) console.log(error);;
+      showConnectedClients(clients)
       io.emit('users', clients); // tämä lähettää kaikille käyttäjille lista kytketyistä käyttäjistä.
     });
 
