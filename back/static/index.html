@@ -100,11 +100,11 @@
         </div>
     </div>
 
-    <script src="/socket.io/socket.io.js"></script>
+    <script src="/socket.io"></script>
     <script>
 
         // >>>>>>>>>> SOCKET.IO VARIABLES >>>>>>>>>>
-        const socket = io(); // Initialize socket.io connection with the server.
+        const socket = io('localhost:8080'); // Initialize socket.io connection with the server.
         // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
         // >>>>>>>>>> DOM ELEMENT VARIABLES >>>>>>>>>>

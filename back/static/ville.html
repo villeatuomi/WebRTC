@@ -1,5 +1,6 @@
 <!doctype html>
 <html>
+<script src='https://kit.fontawesome.com/a076d05399.js'></script>
 
 <head>
     <title>Socket.IO chat</title>
@@ -14,6 +15,137 @@
             font: 13px Helvetica, Arial;
         }
 
+        form {
+            background: #000;
+            padding: 3px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        form input {
+            border: 0;
+            padding: 10px;
+            width: 90%;
+            margin-right: .5%;
+        }
+
+        form button {
+            width: 9%;
+            background: rgb(130, 224, 255);
+            border: none;
+            padding: 10px;
+        }
+
+        #messages li {
+            padding: 5px 10px;
+        }
+
+        #messages li:nth-child(odd) {
+            background: #eee;
+        }
+
+
+
+
+
+
+        /* Button used to open the chat form - fixed at the bottom of the page */
+        .open-button {
+            background-color: rgba(76, 175, 80, 0.86);
+            color: white;
+            padding: 16px 20px;
+            border: none;
+            cursor: pointer;
+            opacity: 0.8;
+            position: fixed;
+            bottom: 23px;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+
+        /* The popup chat - hidden by default */
+        .chat-popup {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            border: 3px solid #f1f1f1;
+            z-index: 9;
+        }
+
+        .form-container {
+            max-width: 300px;
+
+            margin-bottom: 10px;
+            padding: 5px;
+            background-color: white;
+            border: 1px solid #343434;
+            border-radius: 5px;
+            box-shadow: #484848 5px 5px 5px;
+        }
+
+        .form-container .btn {
+            background-color: #4caf50;
+            color: white;
+            padding: 16px 20px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 10px;
+            opacity: 0.8;
+        }
+
+        .form-container .cancel {
+            background-color: red;
+        }
+
+        .form-container input {
+            width: 91%;
+            padding: 15px;
+            margin: 10px 0 10px 0;
+            background: #f1f1f1;
+            resize: none;
+            min-height: 20px;
+        }
+
+        .form-container input:focus {
+            background-color: #ddd;
+            outline: none;
+        }
+
+        .form-container ul {
+            list-style: none;
+            max-height: 300px;
+            overflow-y: scroll;
+        }
+
+        .chat-container li {
+            overflow-y: visible;
+        }
+
+        #settingsbtn {
+            background-color: white;
+            float: right;
+            padding: 0 5px 0 5px;
+        }
+
+        #settingstab div {
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        #savename {
+            background-color: white;
+            float: right;
+            padding: 0 5px 0 5px;
+        }
+
+        #inputbox {
+            display: flex;
+            align-items: center;
+        }
+
         #container {
             height: 500px;
             width: 900px;
@@ -22,95 +154,90 @@
         }
 
         #videos {
-            width: 60%;
+            width: 40%;
             height: 100%;
             background-color: red;
         }
 
         video {
-            width: 50%;
+            width: 100%;
             height: 50%;
         }
 
-        #chat {
-            width: 40%;
-            height: 100%;
-            background-color: green;
-        }
-
-        #chatLog {
-            width: 100%;
-            height: 80%;
-            background-color: yellow;
-        }
-
-        #chatForm {
-            width: 100%;
-            height: 20%;
-            background-color: purple;
-        }
-
-        form {
-            background: #000;
-            width: 100%;
-        }
-
-        form input {
-            border: 0;
-            padding: 10px;
-            width: 80%;
-            margin-right: .5%;
-        }
-
-        form button {
-            background: rgb(130, 224, 255);
-            border: none;
-            padding: 10px;
-        }
-
-        ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        li {
-            padding: 5px 10px;
-        }
-
-        ul li:nth-child(odd) {
-            background: #eee;
-        }
+        
     </style>
 </head>
 <!-- playsinline -->
 
 <body>
-    <div id="container">
-        <div id="videos"><video autoplay controls></video></div>
-        <div id="chat">
-            <div id="chatLog">
+
+    <button class="open-button" id="openbtn" onclick="openForm()">
+        <i class='far fa-comment' style='font-size:24px'></i>
+    </button>
+
+
+    <div class="chat-popup" id="myForm">
+        <form action="" class="form-container">
+            <div id="settingstab" style="display: none">
+                <div>
+                    <input id="newname" placeholder="Enter name">
+                    <i id="savename" class='fas fa-save' style='font-size:24px' onclick="closeSettings()"></i>
+                </div>
+            </div>
+            <div class="chat-container">
                 <ul></ul>
             </div>
-            <div id="chatForm">
-                <form action="">
-                    <input autocomplete="off" /><button>Send</button>
-                </form>
+            <div id="inputbox" style="width: 100%">
+                <input id="inputmsg" autocomplete="off" />
+                <i id="settingsbtn" onclick="openSettings()" class='fas fa-cog' style='font-size:24px'></i>
             </div>
-        </div>
+            <button id="sendbtn" class="btn send">Send</button>
+            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+        </form>
     </div>
 
-    <script src="/socket.io/socket.io.js"></script>
+    <div id="container">
+        <div id="videos"><video autoplay controls></video></div>
+    </div>
+
+    <script src="/socket.io"></script>
+    <script>
+        // Chat ikkunan funktiot
+
+        function openForm() {
+            document.getElementById("openbtn").style.display = 'none';
+            document.getElementById("myForm").style.display = "block";
+        }
+
+        function closeForm() {
+            document.getElementById("openbtn").style.display = 'block';
+            document.getElementById("myForm").style.display = "none";
+        }
+
+        function openSettings() {
+            document.querySelector('#settingstab').style.display = 'block';
+        }
+
+        function closeSettings() {
+            document.querySelector('#settingstab').style.display = 'none';
+        }
+
+    </script>
     <script>
 
         // >>>>>>>>>> SOCKET.IO VARIABLES >>>>>>>>>>
-        const socket = io(); // Initialize socket.io connection with the server.
+        const socket = io('localhost:8080'); // Initialize socket.io connection with the server.
         // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
 
         // >>>>>>>>>> DOM ELEMENT VARIABLES >>>>>>>>>>
         // Select the DOM elements
+        const sendBtn = document.querySelector('#sendbtn');
+        const inputDOM = document.querySelector('#inputmsg');
+        //----
         const formDOM = document.querySelector('form');
-        const inputDOM = document.querySelector('input');
+       // const inputDOM = document.querySelector('input');
         const ulDOM = document.querySelector('ul');
         // Video element where stream will be placed.
         const localVideo = document.querySelector('video');
@@ -145,6 +272,12 @@
         });
 
         socket.on('messageFromUser', (message) => {
+            const parsedMessage = JSON.parse(message);
+            console.log(parsedMessage.sdp);
+            let pc2 = new RTCPeerConnection(conf);
+            console.log(pc2);
+            
+
             console.log(message, 'Joku lähetti yksityisviestin');
         });
 
@@ -154,7 +287,34 @@
                 if (client == socket.id) {
                     console.log(`You can't send offer to yourself!`);
                 } else {
-                    socket.emit('sendOffer', client, Math.random().toString());
+
+                    let offerMessage = {}; // 191007klo1135
+
+                    let pc = new RTCPeerConnection();
+                    console.log('This is the local RTCPeerConnection object', pc);
+                    pc.createOffer().then(offer => {
+                        return pc.setLocalDescription(offer);
+                    }).then(jotain => {
+                        // Initializes media stream.
+                        navigator.mediaDevices.getUserMedia(mediaStreamConstraints)
+                            .then(gotLocalMediaStream).catch(handleLocalMediaStreamError);
+                        trace('Nyt ohitimme getUserMedia-rivin');
+
+
+                        console.log('This is the SDP of the local client', pc.localDescription.sdp);
+
+                        offerMessage.sender = socket.id;
+                        offerMessage.receiver = client;
+                        offerMessage.sdp = pc.localDescription.sdp;
+
+
+                        console.log('offerMessage:', offerMessage);
+                        const jsonOfferMessage = JSON.stringify(offerMessage);
+                        socket.emit('sendOffer', client, jsonOfferMessage);
+
+                    });
+
+                    // socket.emit('sendOffer', client, Math.random().toString());
                 }
             });
         });
@@ -184,6 +344,8 @@
             mediaStream.getTracks().forEach(track => {
                 pc.addTrack(track, mediaStream); // This returns a RTCRtpSender object
                 console.log(pc, 'sisällä');
+                console.log(pc.getLocalStreams()); // 191007klo1120 This returns the mediastreams which is connected pc.
+
             });
 
             console.log(pc, 'ulkona');
@@ -217,12 +379,7 @@
             }
         }
 
-
         // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
-        let pc = new RTCPeerConnection();
-        console.log('This is the local RTCPeerConnection object', pc);
-        pc.createOffer().then(offer => { return pc.setLocalDescription(offer) }).then(jotain => console.log('This is the SDP of the local client', pc.localDescription.sdp));
 
 
         /*
@@ -231,11 +388,6 @@
         
                 };
         */
-
-        // Initializes media stream.
-        navigator.mediaDevices.getUserMedia(mediaStreamConstraints)
-            .then(gotLocalMediaStream).catch(handleLocalMediaStreamError);
-        trace('Nyt ohitimme getUserMedia-rivin');
 
 
         // >>>>>>>>>> EVENT HANDLERS >>>>>>>>>>

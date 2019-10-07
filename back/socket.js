@@ -22,7 +22,7 @@ io.on('connection', (socket) => {
 
   socket.on('sendOffer', (id, msg) => {
     // Relay a message from the sender to the receiver.
-    socket.to(id).emit('messageFromUser', `Käyttäjä ${socket.id} lähetti sinulle yksityisviestin ${msg}`);
+    socket.to(id).emit('messageFromUser', msg);
   });
 
 
