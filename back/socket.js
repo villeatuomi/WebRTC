@@ -8,8 +8,7 @@ const PORT = require('./config').port.wss
 // socket methods are something connected client activates
 
 io.on('connection', (socket) => {
-  console.log(`The user "${socket.id}" connected.`);
-
+  console.log(`+++ ${socket.id} connected +++`);
 
   // SEND TO ALL CONNECTED CLIENTS AN ARRAY OF CONNECTED CLIENTS WHEN NEW CLIENT CONNECTS
   io.clients((error, clients) => {
