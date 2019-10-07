@@ -3,7 +3,13 @@ const fs = require('fs')
 const trueLog = console.log
 
 console.log = (msg) => {
-  fs.appendFile("./log.log", "\n"+msg, err => {
+
+  const date = new Date()
+  const dateString = `\n[${date.getDay()}.${date.getMonth()}.${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] `
+
+  msg = dateString+msg
+
+  fs.appendFile("./log.log", msg, err => {
     if(err) {
       return trueLog(err)
     }

@@ -1,8 +1,10 @@
 const requestLogger = (req, res, next) => {
-  console.log('\nMethod:', req.method)
-  console.log('Path:  ', req.path)
-  console.log('Body:  ', req.body)
-  console.log('---')
+  console.log(
+    '\nMethod: '+req.method
+    +'\nPath:   '+req.path
+    +'\nBody:   ' +(req.body||'empty')
+    +'\n---'
+  )
   next()
 }
 
