@@ -3,7 +3,7 @@ const fs = require('fs')
 const trueLog = console.log
 
 console.log = (msg) => {
-  fs.appendFile("./log.log", msg, err => {
+  fs.appendFile("./log.log", "\n"+msg, err => {
     if(err) {
       return trueLog(err)
     }

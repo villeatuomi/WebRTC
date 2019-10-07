@@ -12,6 +12,8 @@ api.get('/viewers', async (req, res) => {
   res.status(200).send(JSON.stringify(data))
 })
 
+console.log(`\nWebSocket is open on port: ${PORT}`)
+
 io.listen(ioServer.PORT)
 
 module.exports = api
