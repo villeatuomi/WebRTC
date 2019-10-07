@@ -1,18 +1,14 @@
 const main = require('express').Router()
 const path = require('path')
 const fs = require('fs')
-const ioClient = require('socket.io-client/dist/socket.io.js')
 
 const getFile = (res, filePath) => {
   const file = path.resolve(filePath)
-  try {
-    if (fs.existsSync(file)) {
-      return res.sendFile(file)
-    }
-  } catch(err) {
-    console.error(err)
+
+  if (fs.existsSync(file))
+    return res.sendFile(file)
+  else
     return res.status(404).send()
-  }
 }
 
 main.get('/ville', (req, res) => {

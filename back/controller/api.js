@@ -12,7 +12,7 @@ api.get('/viewers', async (req, res) => {
   res.status(200).send(JSON.stringify(data))
 })
 
-console.log(`\nWebSocket is open on port: ${ioServer.PORT}`)
+console.log(`WebSocket is open on port: ${ioServer.PORT}`)
 
 io.listen(ioServer.PORT)
 
