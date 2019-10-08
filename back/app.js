@@ -1,7 +1,14 @@
 const fs = require('fs')
+const express = require('express')
+const bodyParser = require('body-parser')
+const app = express()
+const mainRouter = require('./controller/main')
+const apiRouter = require('./controller/api')
+const middleware = require('./utility/middleware')
+const config = require('./config')
+
 
 const trueLog = console.log
-
 console.log = (msg) => {
 
   const date = new Date()
@@ -19,12 +26,19 @@ console.log = (msg) => {
 
 }
 
-const express = require('express')
-const bodyParser = require('body-parser')
-const app = express()
-const mainRouter = require('./controller/main')
-const apiRouter = require('./controller/api')
-const middleware = require('./utility/middleware')
+// Certificate
+
+const privateKey = (config.development)?"":fs.readFileSync('/etc/letsencrypt/live/dev.lira.fi/privkey.pem', 'utf8');
+const certificate = (config.development)?"":fs.readFileSync('/etc/letsencrypt/live/dev.lira.fi/cert.pem', 'utf8');
+const ca = (config.development)?"":fs.readFileSync('/etc/letsencrypt/live/dev.lira.fi/chain.pem', 'utf8');
+
+const credentials = {
+  key: privateKey,
+  cert: certificate,
+  ca: ca
+}
+
+
 
 app.use(middleware.requestLogger)
 app.use(bodyParser.json())
@@ -37,4 +51,7 @@ app.use('', mainRouter)
 app.use(express.static('../front'))
 
 
-module.exports = app
+module.exports = {
+  app,
+  credentials
+}

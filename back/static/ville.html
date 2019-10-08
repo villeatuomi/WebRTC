@@ -224,7 +224,7 @@
     <script>
 
         // >>>>>>>>>> SOCKET.IO VARIABLES >>>>>>>>>>
-        const socket = io('dev.lira.fi:8080'); // Initialize socket.io connection with the server.
+        const socket = io.connect('https://dev.lira.fi', {secure:true}); // Initialize socket.io connection with the server.
         // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 

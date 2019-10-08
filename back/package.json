@@ -4,12 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "concurrently \"npm:watch-*\"",
-    "start": "concurrently \"npm:start-*\"",
-    "start-http": "node index.js",
-    "start-wss": "node socket.js",
-    "watch-http": "nodemon index.js",
-    "watch-wss": "nodemon socket.js"
+    "test": "nodemon index.js",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",

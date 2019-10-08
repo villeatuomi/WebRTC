@@ -26,6 +26,14 @@ main.get('/matias', (req, res) => {
   getFile(res, file)
 })
 
+
+
+
+main.get('/.well-known/acme-challenge/randomtesxthere', (req, res) => {
+  const file = path.resolve('certificate/randomtesxthere')
+  getFile(res, file)
+})
+
 main.get('*', async (req, res) => {
   res.status(404).send()
 })
