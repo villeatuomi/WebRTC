@@ -16,6 +16,11 @@ main.get('/ville/:number', (req, res) => {
   getFile(res, file)
 })
 
+main.get('/ville/:file', (req, res) => {
+  const file = path.resolve(`static/${req.params.file}`)
+  getFile(res, file)
+})
+
 main.get('/socket.io', (req, res) => {
   const file = path.resolve('node_modules/socket.io-client/dist/socket.io.js')
   getFile(res, file)

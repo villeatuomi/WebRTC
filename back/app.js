@@ -43,7 +43,7 @@ const credentials = {
 app.use(middleware.requestLogger)
 app.use(bodyParser.json())
 
-app.use('/', express.static('../front/test-socket.html'));
+app.use('/', express.static(__dirname+'/static'));
 
 app.use('/api', apiRouter)
 app.use('', mainRouter)
