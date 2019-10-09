@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="eng">
+
+<head>
+    <title>WCG -- WebRTC Tutorial For Beginners</title>
+</head>
+
+<body>
+    <div><video id="remoteview" autoplay></video>
+        <video id="selfview" autoplay></video>
+    </div>
+
+    <button type="button" id="makeCall">Make Call</button>
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        let socket = io();
+    </script>
+    <script src="/jsville2.js"></script>
+
+</body>
+
+</html>

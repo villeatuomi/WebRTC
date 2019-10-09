@@ -32,14 +32,21 @@ io.on('connection', (socket) => {
 
   socket.on('sendOffer', (receiver, msg) => {
     // Relay a message from the sender to the receiver.
-    socket.to(receiver).emit('messageFromUser', msg);
+    socket.to(receiver).emit('offerFromUser', msg);
   });
+
+
+  socket.on('sendAnswer', (receiver, msg) => {
+    // Relay a message from the sender to the receiver.
+    socket.to(receiver).emit('answerFromUser', msg);
+  });
+
 
   socket.on('disconnect', () => {
     console.log(`--- ${socket.id} disconnected ---`);
 
     io.clients((error, clients) => {
-      if (error) console.log(error);;
+      if (error) console.log(error);
       showConnectedClients(clients)
       io.emit('users', clients); // tämä lähettää kaikille käyttäjille lista kytketyistä käyttäjistä.
     });

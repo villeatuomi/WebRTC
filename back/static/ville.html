@@ -163,8 +163,6 @@
             width: 100%;
             height: 50%;
         }
-
-        
     </style>
 </head>
 <!-- playsinline -->
@@ -237,7 +235,7 @@
         const inputDOM = document.querySelector('#inputmsg');
         //----
         const formDOM = document.querySelector('form');
-       // const inputDOM = document.querySelector('input');
+        // const inputDOM = document.querySelector('input');
         const ulDOM = document.querySelector('ul');
         // Video element where stream will be placed.
         const localVideo = document.querySelector('video');
@@ -254,6 +252,8 @@
 
         // >>>>>>>>>> WEBRTCPEERCONNECTION CONFIGURATION OBJECT >>>>>>>>>>
         const conf = { "iceServers": [{ urls: ['stun:stun.l.google.com:19302'] }] };
+        let pc = new RTCPeerConnection(conf);
+        let pc2 = new RTCPeerConnection(conf);
         // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
         // >>>>>>>>>> SOCKET.IO EVENT LISTENERS >>>>>>>>>>
@@ -271,15 +271,65 @@
             console.log(`The was a change in the users of the app and now connected users are: ${users}`);
         });
 
-        socket.on('messageFromUser', (message) => {
+        socket.on('offerFromUser', (message) => {
             const parsedMessage = JSON.parse(message);
             console.log(parsedMessage.sdp);
-            let pc2 = new RTCPeerConnection(conf);
+            //let pc2 = new RTCPeerConnection(conf);
             console.log(pc2);
-            
+            let desc = new RTCSessionDescription(parsedMessage.sdp);
+            const offerSender = parsedMessage.sender;
+            console.log('desc on:', desc);
+            /*
+                        pc2.setRemoteDescription(parsedMessage.sdp)
+                        .then(() => console.log(pc2));*/
 
-            console.log(message, 'Joku lähetti yksityisviestin');
+
+
+            pc2.setRemoteDescription(desc).then(function () {
+                const mediaConstraints = {
+                    video: true,
+                };
+                return navigator.mediaDevices.getUserMedia(mediaConstraints);
+            }).then(function (stream) {
+                localStream = stream;
+                localVideo.srcObject = localStream;
+
+                localStream.getTracks().forEach(track => pc2.addTrack(track, localStream));
+            }).then(function () {
+                return pc2.createAnswer();
+            }).then(function (answer) {
+                return pc2.setLocalDescription(answer);
+            }).then(function () {
+                let answerMessage = {
+                    sender: socket.id,
+                    receiver: offerSender,
+                    sdp: pc2.localDescription
+                };
+                const jsonAnswerMessage = JSON.stringify(answerMessage);
+                console.log(jsonAnswerMessage);
+
+
+                socket.emit('sendAnswer', offerSender, jsonAnswerMessage);
+                console.log('jsonAnswerMessage', jsonAnswerMessage);
+                console.log(message, 'Joku lähetti yksityisviestin');
+            });
         });
+
+        socket.on('answerFromUser', (message) => {
+            console.log(message);
+            const parsedAnswer = JSON.parse(message);
+            console.log(parsedAnswer);
+            let desc2 = new RTCSessionDescription(parsedAnswer.sdp);
+            console.log(desc2);
+            pc.setRemoteDescription(desc2).then(() => {
+                console.log('This pc is after getting answer', pc);
+                const testi = new RTCIceCandidate();
+                console.log(testi);
+            });
+            console.log('JIPPIII!!!!');
+        });
+
+
 
         socket.on('clientsFirstTime', (clients) => {
             console.log(clients, 'Here is list of all previously connected users. Use this list only to send offers.');
@@ -287,10 +337,8 @@
                 if (client == socket.id) {
                     console.log(`You can't send offer to yourself!`);
                 } else {
-
                     let offerMessage = {}; // 191007klo1135
-
-                    let pc = new RTCPeerConnection();
+                    //let pc = new RTCPeerConnection(conf);
                     console.log('This is the local RTCPeerConnection object', pc);
                     pc.createOffer().then(offer => {
                         return pc.setLocalDescription(offer);
@@ -299,25 +347,21 @@
                         navigator.mediaDevices.getUserMedia(mediaStreamConstraints)
                             .then(gotLocalMediaStream).catch(handleLocalMediaStreamError);
                         trace('Nyt ohitimme getUserMedia-rivin');
-
-
                         console.log('This is the SDP of the local client', pc.localDescription.sdp);
-
                         offerMessage.sender = socket.id;
                         offerMessage.receiver = client;
-                        offerMessage.sdp = pc.localDescription.sdp;
-
-
+                        offerMessage.sdp = pc.localDescription;
                         console.log('offerMessage:', offerMessage);
                         const jsonOfferMessage = JSON.stringify(offerMessage);
                         socket.emit('sendOffer', client, jsonOfferMessage);
-
                     });
-
                     // socket.emit('sendOffer', client, Math.random().toString());
                 }
             });
         });
+
+
+
         // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
         // >>>>>>>>>> FUNCTIONS >>>>>>>>>>
@@ -359,6 +403,8 @@
 
         // TÄTÄ FUNKTIOTA EI OLE VIELÄ KUTSUTTU KERTAAKAAN
         function handleConnection(event) {
+            console.log('Päästiin funktioon handleConnection!!!');
+
             const peerConnection = event.target;
             const iceCandidate = event.candidate;
 
@@ -380,18 +426,47 @@
         }
 
         // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        pc.onicecandidate = ({ candidate }) => {
+
+            console.log('##### ONICECANDIDATE #####');
+            function handleICECandidateEvent(event) {
+                if (event.candidate) {
+                    sendToServer({
+                        type: "new-ice-candidate",
+                        target: targetUsername,
+                        candidate: event.candidate
+                    });
+                }
+            }
 
 
-        /*
-                pc.ontrack = function (event) {
-                    console.log('bfshgkjdfhgkjdfhgkjsdhfkjhdfjhdhfjhfsdhfs');
-        
-                };
-        */
+        };
+        pc.ontrack = (track) => { console.log('##### ONTRACK #####') };
+        pc.onnegotiationneeded = (onnegotiationneeded) => {
+            console.log('##### PC ONNNEGOTIATIONNEEDED  #####');
+            console.log(onnegotiationneeded);
+        };
 
 
+        pc2.onicecandidate = ({ candidate }) => { console.log('##### ONICECANDIDATE #####') };
+        pc2.ontrack = (track) => { console.log('##### ONTRACK #####') };
+        pc2.onnegotiationneeded = (onnegotiationneeded) => {
+            console.log('##### PC2 ONNNEGOTIATIONNEEDED #####');
+            console.log(onnegotiationneeded);
+        };
+
+        pc.addEventListener("icecandidate", ev => {
+            if (ev.candidate) {
+                socket.emit('sendAnswer', offerSender, jsonAnswerMessage);
+                socket.emit()//jatkan vielä kirjoittamista
+                sendMessage({
+                    type: "new-ice-candidate",
+                    candidate: event.candidate
+                });
+            }
+        }, false);
         // >>>>>>>>>> EVENT HANDLERS >>>>>>>>>>
-        //pc.addEventListener('iceconnectionstatechange', handleConnectionChange); // EI VIELÄ TESTATTU
+        pc.addEventListener('iceconnectionstatechange', handleConnectionChange); // EI VIELÄ TESTATTU
         //pc.addEventListener('icecandidate', handleConnection); // EI VIELÄ TESTATTU
         formDOM.addEventListener('submit', submitFunc);
         // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
