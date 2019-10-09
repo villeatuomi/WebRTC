@@ -16,8 +16,9 @@ main.get('/ville/:number', (req, res) => {
   getFile(res, file)
 })
 
-main.get('/ville/:file', (req, res) => {
+main.get('/ville/files/:file', (req, res) => {
   const file = path.resolve(`static/${req.params.file}`)
+  console.log(req.params.file);
   getFile(res, file)
 })
 
