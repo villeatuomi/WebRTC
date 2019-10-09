@@ -11,8 +11,8 @@ const getFile = (res, filePath) => {
     return res.status(404).send()
 }
 
-main.get('/ville', (req, res) => {
-  const file = path.resolve('static/ville.html')
+main.get('/ville/:number', (req, res) => {
+  const file = path.resolve(`static/ville${req.params.number}.html`)
   getFile(res, file)
 })
 
@@ -23,6 +23,14 @@ main.get('/socket.io', (req, res) => {
 
 main.get('/matias', (req, res) => {
   const file = path.resolve('static/matias.html')
+  getFile(res, file)
+})
+
+
+
+
+main.get('/.well-known/acme-challenge/randomtesxthere', (req, res) => {
+  const file = path.resolve('certificate/randomtesxthere')
   getFile(res, file)
 })
 

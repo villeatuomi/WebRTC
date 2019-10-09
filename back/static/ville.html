@@ -224,7 +224,7 @@
     <script>
 
         // >>>>>>>>>> SOCKET.IO VARIABLES >>>>>>>>>>
-        const socket = io('localhost:8080'); // Initialize socket.io connection with the server.
+        const socket = io.connect('https://dev.lira.fi', {secure:true}); // Initialize socket.io connection with the server.
         // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
@@ -351,6 +351,8 @@
                         offerMessage.sender = socket.id;
                         offerMessage.receiver = client;
                         offerMessage.sdp = pc.localDescription;
+
+
                         console.log('offerMessage:', offerMessage);
                         const jsonOfferMessage = JSON.stringify(offerMessage);
                         socket.emit('sendOffer', client, jsonOfferMessage);
@@ -404,7 +406,7 @@
         // TÄTÄ FUNKTIOTA EI OLE VIELÄ KUTSUTTU KERTAAKAAN
         function handleConnection(event) {
             console.log('Päästiin funktioon handleConnection!!!');
-
+            
             const peerConnection = event.target;
             const iceCandidate = event.candidate;
 
