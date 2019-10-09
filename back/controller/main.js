@@ -22,6 +22,8 @@ main.get('/ville/files/:file', (req, res) => {
   getFile(res, file)
 })
 
+
+
 main.get('/socket.io', (req, res) => {
   const file = path.resolve('node_modules/socket.io-client/dist/socket.io.js')
   getFile(res, file)
@@ -32,7 +34,11 @@ main.get('/matias', (req, res) => {
   getFile(res, file)
 })
 
-
+main.get('/matias/files/:file', (req, res) => {
+  const file = path.resolve(`static/${req.params.file}`)
+  console.log(req.params.file);
+  getFile(res, file)
+})
 
 
 main.get('/.well-known/acme-challenge/randomtesxthere', (req, res) => {
