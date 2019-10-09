@@ -2,13 +2,14 @@ const app = require('./app')
 const PORT = require('./config').port
 const devMode = require('./config').development
 
+let server;
 if(!devMode) {
-  const server = require('http').createServer((req, res) => {
+  server = require('http').createServer((req, res) => {
     res.writeHead(301, {"Location": "https://" + req.headers['host'] + req.url});
     res.end();
   });
 } else if (devMode) {
-  const server = require('http').createServer(app.app)
+  server = require('http').createServer(app.app)
   const io = require('socket.io')(server);
   require('./socket')(io)
 }
