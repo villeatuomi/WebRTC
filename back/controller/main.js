@@ -11,8 +11,8 @@ const getFile = (res, filePath) => {
     return res.status(404).send()
 }
 
-main.get('/ville', (req, res) => {
-  const file = path.resolve('static/ville.html')
+main.get('/ville/:number', (req, res) => {
+  const file = path.resolve(`static/ville${req.params.number}.html`)
   getFile(res, file)
 })
 
