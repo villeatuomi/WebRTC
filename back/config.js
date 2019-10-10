@@ -5,5 +5,5 @@ module.exports =
       https:443,
       wss:8080
     },
-    development: true //determines in which mode shall server run
+    development: false //determines in which mode shall server run
 }

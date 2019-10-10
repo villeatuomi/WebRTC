@@ -3,7 +3,6 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
 const mainRouter = require('./controller/main')
-const apiRouter = require('./controller/api')
 const middleware = require('./utility/middleware')
 const config = require('./config')
 
@@ -45,7 +44,6 @@ app.use(bodyParser.json())
 
 app.use('/', express.static(__dirname+'/static'));
 
-app.use('/api', apiRouter)
 app.use('', mainRouter)
 
 app.use(express.static('../front'))
