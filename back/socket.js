@@ -84,6 +84,11 @@ module.exports = (io) => {
       socket.to(receiver).emit("candiToRemote", msg);
     });
 
+    socket.on("candiToLocal", (receiver, msg) => {
+      console.log("candidate message recieved!");
+      socket.to(receiver).emit("candiToLocal", msg);
+    });
+
     socket.on("sdpToRemote", (receiver, msg) => {
       console.log("sdp message broadcasted!");
       socket.to(receiver).emit("sdpToRemote", msg);

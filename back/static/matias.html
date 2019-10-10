@@ -3,236 +3,235 @@
 <script src='https://kit.fontawesome.com/a076d05399.js'></script>
 
 <head>
-    <title>Socket.IO chat</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <title>Socket.IO chat</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            font: 13px Helvetica, Arial;
-        }
+    body {
+      font: 13px Helvetica, Arial;
+    }
 
-        form {
-            background: #000;
-            padding: 3px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
+    form {
+      background: #000;
+      padding: 3px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
 
-        form input {
-            border: 0;
-            padding: 10px;
-            width: 90%;
-            margin-right: .5%;
-        }
+    form input {
+      border: 0;
+      padding: 10px;
+      width: 90%;
+      margin-right: .5%;
+    }
 
-        form button {
-            width: 9%;
-            background: rgb(130, 224, 255);
-            border: none;
-            padding: 10px;
-        }
+    form button {
+      width: 9%;
+      background: rgb(130, 224, 255);
+      border: none;
+      padding: 10px;
+    }
 
-        #messages li {
-            padding: 5px 10px;
-        }
+    #messages li {
+      padding: 5px 10px;
+    }
 
-        #messages li:nth-child(odd) {
-            background: #eee;
-        }
+    #messages li:nth-child(odd) {
+      background: #eee;
+    }
 
-        /* Button used to open the chat form - fixed at the bottom of the page */
-        .open-button {
-            background-color: #4caf50;
-            color: white;
-            padding: 16px 20px;
-            border: none;
-            cursor: pointer;
-            opacity: 0.8;
-            position: fixed;
-            bottom: 30px;
-            border-radius: 50%;
-            margin-left: 10px;
-            z-index: 1;
-        }
+    /* Button used to open the chat form - fixed at the bottom of the page */
+    .open-button {
+      background-color: #4caf50;
+      color: white;
+      padding: 16px 20px;
+      border: none;
+      cursor: pointer;
+      opacity: 0.8;
+      position: fixed;
+      bottom: 30px;
+      border-radius: 50%;
+      margin-left: 10px;
+      z-index: 1;
+    }
 
-        /* The popup chat - hidden by default */
-        .chat-popup {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 4px;
-            z-index: 9;
+    /* The popup chat - hidden by default */
+    .chat-popup {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 4px;
+      z-index: 9;
 
-        }
+    }
 
-        .form-container {
-            max-width: 300px;
+    .form-container {
+      max-width: 300px;
 
-            margin-bottom: 10px;
-            padding: 5px;
-            background-color: white;
-            border: 1px solid #343434;
-            border-radius: 5px;
-            box-shadow: #484848 5px 5px 5px;
-        }
+      margin-bottom: 10px;
+      padding: 5px;
+      background-color: white;
+      border: 1px solid #343434;
+      border-radius: 5px;
+      box-shadow: #484848 5px 5px 5px;
+    }
 
-        .form-container .btn {
-            background-color: #4caf50;
-            color: white;
-            padding: 16px 20px;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            margin-bottom: 10px;
-            opacity: 0.8;
-        }
+    .form-container .btn {
+      background-color: #4caf50;
+      color: white;
+      padding: 16px 20px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 10px;
+      opacity: 0.8;
+    }
 
-        .form-container .cancel {
-            background-color: red;
-        }
+    .form-container .cancel {
+      background-color: red;
+    }
 
-        .form-container input {
-            width: 91%;
-            padding: 15px;
-            margin: 10px 0 10px 0;
-            background: #f1f1f1;
-            resize: none;
-            min-height: 20px;
-        }
+    .form-container input {
+      width: 91%;
+      padding: 15px;
+      margin: 10px 0 10px 0;
+      background: #f1f1f1;
+      resize: none;
+      min-height: 20px;
+    }
 
-        .form-container input:focus {
-            background-color: #ddd;
-            outline: none;
-        }
+    .form-container input:focus {
+      background-color: #ddd;
+      outline: none;
+    }
 
-        .form-container ul {
-            list-style: none;
-            max-height: 300px;
-            overflow-y: scroll;
-        }
+    .form-container ul {
+      list-style: none;
+      max-height: 300px;
+      overflow-y: scroll;
+    }
 
-        .chat-container li {
-            overflow-y: visible;
-        }
+    .chat-container li {
+      overflow-y: visible;
+    }
 
-        #settingsbtn {
-            background-color: white;
-            float: right;
-            padding: 0 5px 0 5px;
-            cursor: pointer;
-        }
+    #settingsbtn {
+      background-color: white;
+      float: right;
+      padding: 0 5px 0 5px;
+      cursor: pointer;
+    }
 
-        #settingstab div {
-            width: 100%;
-            display: flex;
-            align-items: center;
-        }
+    #settingstab div {
+      width: 100%;
+      display: flex;
+      align-items: center;
+    }
 
-        #savename {
-            background-color: white;
-            float: right;
-            padding: 0 5px 0 5px;
-            cursor: pointer;
-        }
+    #savename {
+      background-color: white;
+      float: right;
+      padding: 0 5px 0 5px;
+      cursor: pointer;
+    }
 
-        #inputbox {
-            display: flex;
-            align-items: center;
-        }
+    #inputbox {
+      display: flex;
+      align-items: center;
+    }
 
-        #container {
-            height: 100vh;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            position: relative;
-        }
+    #container {
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      position: relative;
+    }
 
-        #videos {
-            display: grid;
-            grid-template-columns: auto;
-            height: 100vh;
-            width: 96%;
-        }
+    #videos {
+      display: grid;
+      grid-template-columns: auto;
+      height: 100vh;
+      width: 96%;
+    }
 
-        #video1 {
-            margin: auto;
-            width: 100%;
-        }
+    #video1 {
+      margin: auto;
+      width: 100%;
+    }
 
-        #mute {
-            position: absolute;
-            bottom: 8px;
-            right: 8px;
-            display: none;
-            cursor: pointer;
-        }
+    #mute {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      display: none;
+      cursor: pointer;
+    }
 
-        #myVideo {
-            position: absolute;
-            bottom: 62px;
-            right: 8px;
+    #myVideo {
+      position: absolute;
+      bottom: 62px;
+      right: 8px;
 
-        }
+    }
 
-        #myVideodrag {
-            height: 20px;
-            width: 260px;
-            cursor: move;
+    #myVideodrag {
+      height: 20px;
+      width: 260px;
+      cursor: move;
 
 
-        }
+    }
 
-        #personalVideo {
-            width: 260px;
-        }
+    #personalVideo {
+      width: 260px;
+    }
 
-        #testibutton {
-            position: absolute;
-        }
-
-    </style>
+    #testibutton {
+      position: absolute;
+    }
+  </style>
 </head>
 <!-- playsinline -->
 
 <body>
 
-<button class="open-button" id="openbtn" onclick="openForm()">
+  <button class="open-button" id="openbtn" onclick="openForm()">
     <i class='far fa-comment' style='font-size:24px'></i>
-</button>
+  </button>
 
 
-<div class="chat-popup" id="myForm">
+  <div class="chat-popup" id="myForm">
     <form action="" class="form-container">
-        <div id="settingstab" style="display: none">
-            <div>
-                <input id="newname" placeholder="Enter name">
-                <i id="savename" class='fas fa-save' style='font-size:24px' onclick="closeSettings()"></i>
-            </div>
+      <div id="settingstab" style="display: none">
+        <div>
+          <input id="newname" placeholder="Enter name">
+          <i id="savename" class='fas fa-save' style='font-size:24px' onclick="closeSettings()"></i>
         </div>
-        <div class="chat-container">
-            <ul></ul>
-        </div>
-        <div id="inputbox" style="width: 100%">
-            <input id="inputmsg" autocomplete="off"/>
-            <i id="settingsbtn" onclick="openSettings()" class='fas fa-cog' style='font-size:24px'></i>
-        </div>
-        <button id="sendbtn" class="btn send">Send</button>
-        <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+      </div>
+      <div class="chat-container">
+        <ul></ul>
+      </div>
+      <div id="inputbox" style="width: 100%">
+        <input id="inputmsg" autocomplete="off" />
+        <i id="settingsbtn" onclick="openSettings()" class='fas fa-cog' style='font-size:24px'></i>
+      </div>
+      <button id="sendbtn" class="btn send">Send</button>
+      <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
     </form>
-</div>
+  </div>
 
 
-<div id="container">
+  <div id="container">
 
     <div id="videos">
 
-        <video id="video1" autoplay controls></video>
+      <video id="video1" autoplay controls></video>
 
 
     </div>
@@ -240,133 +239,135 @@
 
     <button id="testibutton" onclick="addVideoelement()">add</button>
     <div id="myVideo">
-        <div id="myVideodrag" style="background-color: rgba(148,144,144,0.69)"><p style="text-align: center">Move video here</p></div>
-        <video id="personalVideo" autoplay controls></video>
-        <!--<i class='fas fa-volume-up' style='font-size:24px' id="mute" onclick="toggleMute()"
+      <div id="myVideodrag" style="background-color: rgba(148,144,144,0.69)">
+        <p style="text-align: center">Move video here</p>
+      </div>
+      <video id="personalVideo" autoplay controls></video>
+      <!--<i class='fas fa-volume-up' style='font-size:24px' id="mute" onclick="toggleMute()"
            onmouseover="showControls()" onmouseleave="hideControls()"> </i>-->
     </div>
 
 
-</div>
+  </div>
 
 
-<script src="/socket.io"></script>
-<script>
+  <script src="/socket.io"></script>
+  <script>
 
 
 
-  // Chat ikkunan funktiot
+    // Chat ikkunan funktiot
 
-  function openForm() {
-    document.getElementById('openbtn').style.display = 'none';
-    document.getElementById('myForm').style.display = 'block';
-  }
-
-  function closeForm() {
-    document.getElementById('openbtn').style.display = 'block';
-    document.getElementById('myForm').style.display = 'none';
-  }
-
-  function openSettings() {
-    document.querySelector('#settingstab').style.display = 'block';
-  }
-
-  function closeSettings() {
-    document.querySelector('#settingstab').style.display = 'none';
-  }
-
-
-  //---------- Video elementtien lisääminen -----------------//
-
-  let n = 1;
-
-  function addVideoelement() {
-    const videoContainer = document.getElementById('videos');
-
-    n++;
-
-    const videoTag = document.createElement('video');
-    videoTag.setAttribute('id', 'video' + n);
-    videoTag.style.margin = 'auto';
-    videoTag.style.width = '100%';
-    videoTag.autoplay = true;
-    videoTag.controls = true;
-    videoTag.load();
-    videoContainer.appendChild(videoTag);
-
-    switch (n) {
-      case 2:
-        videoContainer.style.gridTemplateColumns = 'auto auto';
-        videoContainer.style.width = '100%';
-        break;
-
-      case 3:
-        videoContainer.style.gridTemplateRows = 'auto auto auto';
-        document.getElementById('video1').style.height = '50vh';
-        document.getElementById('video2').style.height = '50vh';
-        document.getElementById('video3').style.height = '50vh';
-        document.getElementById('video3').style.width = '50%';
-        document.getElementById('video3').style.gridColumnStart = '1';
-        document.getElementById('video3').style.gridColumnEnd = '3';
-        break;
-
-      case 4:
-        document.getElementById('video3').style.width = '100%';
-        document.getElementById('video3').style.gridColumnStart = '1';
-        document.getElementById('video3').style.gridColumnEnd = '2';
-        document.getElementById('video4').style.height = '50vh';
-        break;
-    }
-  }
-
-  //------------------------------------------------------------------------------//
-
-
-  //------------------------- MyVideon siirtäminen hiirellä ----------------------//
-
-
-  dragElement(document.getElementById("myVideo"));
-
-  function dragElement(elmnt) {
-    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-    if (document.getElementById(elmnt.id+'drag')) {
-      /* if present, the header is where you move the DIV from:*/
-      document.getElementById(elmnt.id+'drag').onmousedown = dragMouseDown;
-    } else {
-      /* otherwise, move the DIV from anywhere inside the DIV:*/
-      elmnt.onmousedown = dragMouseDown;
+    function openForm() {
+      document.getElementById('openbtn').style.display = 'none';
+      document.getElementById('myForm').style.display = 'block';
     }
 
-    function dragMouseDown(e) {
-      e = e || window.event;
-      e.preventDefault();
-      // get the mouse cursor position at startup:
-      pos3 = e.clientX;
-      pos4 = e.clientY;
-      document.onmouseup = closeDragElement;
-      // call a function whenever the cursor moves:
-      document.onmousemove = elementDrag;
+    function closeForm() {
+      document.getElementById('openbtn').style.display = 'block';
+      document.getElementById('myForm').style.display = 'none';
     }
 
-    function elementDrag(e) {
-      e = e || window.event;
-      e.preventDefault();
-      // calculate the new cursor position:
-      pos1 = pos3 - e.clientX;
-      pos2 = pos4 - e.clientY;
-      pos3 = e.clientX;
-      pos4 = e.clientY;
-      // set the element's new position:
-      elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-      elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+    function openSettings() {
+      document.querySelector('#settingstab').style.display = 'block';
     }
 
-    function closeDragElement() {
-      /* stop moving when mouse button is released:*/
-      document.onmouseup = null;
-      document.onmousemove = null;
+    function closeSettings() {
+      document.querySelector('#settingstab').style.display = 'none';
     }
-  }
+
+
+    //---------- Video elementtien lisääminen -----------------//
+
+    let n = 1;
+
+    function addVideoelement() {
+      const videoContainer = document.getElementById('videos');
+
+      n++;
+
+      const videoTag = document.createElement('video');
+      videoTag.setAttribute('id', 'video' + n);
+      videoTag.style.margin = 'auto';
+      videoTag.style.width = '100%';
+      videoTag.autoplay = true;
+      videoTag.controls = true;
+      videoTag.load();
+      videoContainer.appendChild(videoTag);
+
+      switch (n) {
+        case 2:
+          videoContainer.style.gridTemplateColumns = 'auto auto';
+          videoContainer.style.width = '100%';
+          break;
+
+        case 3:
+          videoContainer.style.gridTemplateRows = 'auto auto auto';
+          document.getElementById('video1').style.height = '50vh';
+          document.getElementById('video2').style.height = '50vh';
+          document.getElementById('video3').style.height = '50vh';
+          document.getElementById('video3').style.width = '50%';
+          document.getElementById('video3').style.gridColumnStart = '1';
+          document.getElementById('video3').style.gridColumnEnd = '3';
+          break;
+
+        case 4:
+          document.getElementById('video3').style.width = '100%';
+          document.getElementById('video3').style.gridColumnStart = '1';
+          document.getElementById('video3').style.gridColumnEnd = '2';
+          document.getElementById('video4').style.height = '50vh';
+          break;
+      }
+    }
+
+    //------------------------------------------------------------------------------//
+
+
+    //------------------------- MyVideon siirtäminen hiirellä ----------------------//
+
+
+    dragElement(document.getElementById("myVideo"));
+
+    function dragElement(elmnt) {
+      let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+      if (document.getElementById(elmnt.id + 'drag')) {
+        /* if present, the header is where you move the DIV from:*/
+        document.getElementById(elmnt.id + 'drag').onmousedown = dragMouseDown;
+      } else {
+        /* otherwise, move the DIV from anywhere inside the DIV:*/
+        elmnt.onmousedown = dragMouseDown;
+      }
+
+      function dragMouseDown(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // get the mouse cursor position at startup:
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        // call a function whenever the cursor moves:
+        document.onmousemove = elementDrag;
+      }
+
+      function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // calculate the new cursor position:
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        // set the element's new position:
+        elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+      }
+
+      function closeDragElement() {
+        /* stop moving when mouse button is released:*/
+        document.onmouseup = null;
+        document.onmousemove = null;
+      }
+    }
 
   //----------------------------------------------------------------//
 
@@ -376,224 +377,224 @@
 
 
 
-  /*
-  const x = document.getElementById('personalVideo');
-  let mute = document.getElementById('mute');
-
-  x.controls = false;
-
-  function playpause() {
-    if (x.paused || x.ended) {
-      const playPromise = x.play();
-      if (playPromise !== null) {
-        playPromise.catch(() => {
-          x.play();
-        });
-      }
-    }
-    else {
-      x.pause();
-    }
-  }
-
-  const playPromise = video.play();
-  if (playPromise !== null) {
-    playPromise.catch(() => {
-      video.play();
-    });
-  }
-  */
-
-  /*
-    function toggleMute() {
-      if (x.muted) {
-        x.muted = false;
-        mute.setAttribute('class', 'fas fa-volume-up');
+    /*
+    const x = document.getElementById('personalVideo');
+    let mute = document.getElementById('mute');
+  
+    x.controls = false;
+  
+    function playpause() {
+      if (x.paused || x.ended) {
+        const playPromise = x.play();
+        if (playPromise !== null) {
+          playPromise.catch(() => {
+            x.play();
+          });
+        }
       }
       else {
-        x.muted = true;
-        mute.setAttribute('class', 'fas fa-volume-mute');
+        x.pause();
       }
     }
-
-    function showControls() {
-      mute.style.display = 'block';
+  
+    const playPromise = video.play();
+    if (playPromise !== null) {
+      playPromise.catch(() => {
+        video.play();
+      });
     }
+    */
 
-    function hideControls() {
-      mute.style.display = 'none';
-    }
-  */
+    /*
+      function toggleMute() {
+        if (x.muted) {
+          x.muted = false;
+          mute.setAttribute('class', 'fas fa-volume-up');
+        }
+        else {
+          x.muted = true;
+          mute.setAttribute('class', 'fas fa-volume-mute');
+        }
+      }
+  
+      function showControls() {
+        mute.style.display = 'block';
+      }
+  
+      function hideControls() {
+        mute.style.display = 'none';
+      }
+    */
 
-</script>
-<script>
+  </script>
+  <script>
 
-  // >>>>>>>>>> SOCKET.IO VARIABLES >>>>>>>>>>
-  const socket = io('localhost:8080'); // Initialize socket.io connection with the server.
-  // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    // >>>>>>>>>> SOCKET.IO VARIABLES >>>>>>>>>>
+    const socket = io('localhost:8080'); // Initialize socket.io connection with the server.
+    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-  // >>>>>>>>>> DOM ELEMENT VARIABLES >>>>>>>>>>
-  // Select the DOM elements
-  const sendBtn = document.querySelector('#sendbtn');
-  const inputDOM = document.querySelector('#inputmsg');
-  //----
-  const formDOM = document.querySelector('form');
-  // const inputDOM = document.querySelector('input');
-  const ulDOM = document.querySelector('ul');
-  // Video element where stream will be placed.
-  const localVideo = document.querySelector('video');
-  // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    // >>>>>>>>>> DOM ELEMENT VARIABLES >>>>>>>>>>
+    // Select the DOM elements
+    const sendBtn = document.querySelector('#sendbtn');
+    const inputDOM = document.querySelector('#inputmsg');
+    //----
+    const formDOM = document.querySelector('form');
+    // const inputDOM = document.querySelector('input');
+    const ulDOM = document.querySelector('ul');
+    // Video element where stream will be placed.
+    const localVideo = document.querySelector('video');
+    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-  // >>>>>>>>>> GETUSERMEDIA VARIABLES >>>>>>>>>>
-  // On this codelab, you will be streaming only video (video: true).
-  const mediaStreamConstraints = {
-    video: true,
-  };
-  // Local stream that will be reproduced on the video.
-  let localStream;
-  // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    // >>>>>>>>>> GETUSERMEDIA VARIABLES >>>>>>>>>>
+    // On this codelab, you will be streaming only video (video: true).
+    const mediaStreamConstraints = {
+      video: true,
+    };
+    // Local stream that will be reproduced on the video.
+    let localStream;
+    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-  // >>>>>>>>>> WEBRTCPEERCONNECTION CONFIGURATION OBJECT >>>>>>>>>>
-  const conf = {'iceServers': [{urls: ['stun:stun.l.google.com:19302']}]};
-  // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    // >>>>>>>>>> WEBRTCPEERCONNECTION CONFIGURATION OBJECT >>>>>>>>>>
+    const conf = { 'iceServers': [{ urls: ['stun:stun.l.google.com:19302'] }] };
+    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-  // >>>>>>>>>> SOCKET.IO EVENT LISTENERS >>>>>>>>>>
-  socket.on('connect', () => {
-    console.log(`My id is: ${socket.id}`); // This log to browsers console the id of the client
-  });
+    // >>>>>>>>>> SOCKET.IO EVENT LISTENERS >>>>>>>>>>
+    socket.on('connect', () => {
+      console.log(`My id is: ${socket.id}`); // This log to browsers console the id of the client
+    });
 
-  socket.on('chat message', (msg) => {
-    let liELEM = document.createElement('li');
-    liELEM.appendChild(document.createTextNode(msg));
-    ulDOM.appendChild(liELEM);
-  });
+    socket.on('chat message', (msg) => {
+      let liELEM = document.createElement('li');
+      liELEM.appendChild(document.createTextNode(msg));
+      ulDOM.appendChild(liELEM);
+    });
 
-  socket.on('users', (users) => {
-    console.log(`The was a change in the users of the app and now connected users are: ${users}`);
-  });
+    socket.on('users', (users) => {
+      console.log(`The was a change in the users of the app and now connected users are: ${users}`);
+    });
 
-  socket.on('messageFromUser', (message) => {
-    const parsedMessage = JSON.parse(message);
-    console.log(parsedMessage.sdp);
-    let pc2 = new RTCPeerConnection(conf);
-    console.log(pc2);
+    socket.on('messageFromUser', (message) => {
+      const parsedMessage = JSON.parse(message);
+      console.log(parsedMessage.sdp);
+      let pc2 = new RTCPeerConnection(conf);
+      console.log(pc2);
 
-    console.log(message, 'Joku lähetti yksityisviestin');
-  });
+      console.log(message, 'Joku lähetti yksityisviestin');
+    });
 
-  socket.on('clientsFirstTime', (clients) => {
-    console.log(clients, 'Here is list of all previously connected users. Use this list only to send offers.');
-    clients.forEach(client => {
-      if (client == socket.id) {
-        console.log(`You can't send offer to yourself!`);
-      } else {
+    socket.on('clientsFirstTime', (clients) => {
+      console.log(clients, 'Here is list of all previously connected users. Use this list only to send offers.');
+      clients.forEach(client => {
+        if (client == socket.id) {
+          console.log(`You can't send offer to yourself!`);
+        } else {
 
-        let offerMessage = {}; // 191007klo1135
+          let offerMessage = {}; // 191007klo1135
 
-        let pc = new RTCPeerConnection();
-        console.log('This is the local RTCPeerConnection object', pc);
-        pc.createOffer().then(offer => {
-          return pc.setLocalDescription(offer);
-        }).then(jotain => {
-          // Initializes media stream.
-          navigator.mediaDevices.getUserMedia(mediaStreamConstraints).
+          let pc = new RTCPeerConnection();
+          console.log('This is the local RTCPeerConnection object', pc);
+          pc.createOffer().then(offer => {
+            return pc.setLocalDescription(offer);
+          }).then(jotain => {
+            // Initializes media stream.
+            navigator.mediaDevices.getUserMedia(mediaStreamConstraints).
               then(gotLocalMediaStream).
               catch(handleLocalMediaStreamError);
-          trace('Nyt ohitimme getUserMedia-rivin');
+            trace('Nyt ohitimme getUserMedia-rivin');
 
-          console.log('This is the SDP of the local client', pc.localDescription.sdp);
+            console.log('This is the SDP of the local client', pc.localDescription.sdp);
 
-          offerMessage.sender = socket.id;
-          offerMessage.receiver = client;
-          offerMessage.sdp = pc.localDescription.sdp;
+            offerMessage.sender = socket.id;
+            offerMessage.receiver = client;
+            offerMessage.sdp = pc.localDescription.sdp;
 
-          console.log('offerMessage:', offerMessage);
-          const jsonOfferMessage = JSON.stringify(offerMessage);
-          socket.emit('sendOffer', client, jsonOfferMessage);
+            console.log('offerMessage:', offerMessage);
+            const jsonOfferMessage = JSON.stringify(offerMessage);
+            socket.emit('sendOffer', client, jsonOfferMessage);
 
-        });
+          });
 
-        // socket.emit('sendOffer', client, Math.random().toString());
-      }
+          // socket.emit('sendOffer', client, Math.random().toString());
+        }
+      });
     });
-  });
-  // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-  // >>>>>>>>>> FUNCTIONS >>>>>>>>>>
+    // >>>>>>>>>> FUNCTIONS >>>>>>>>>>
 
-  const trace = (text) => {
-    text = text.trim();
-    const now = (window.performance.now() / 1000).toFixed(3);
-    console.log(now, text);
-  };
+    const trace = (text) => {
+      text = text.trim();
+      const now = (window.performance.now() / 1000).toFixed(3);
+      console.log(now, text);
+    };
 
-  const submitFunc = (e) => {
-    console.log('submitfunc');
-    e.preventDefault();
-    socket.emit('chat message', inputDOM.value);
-    console.log(`Value of the input field is: ${inputDOM.value}`);
-    inputDOM.value = ''; // Reset the input field.
-  };
+    const submitFunc = (e) => {
+      console.log('submitfunc');
+      e.preventDefault();
+      socket.emit('chat message', inputDOM.value);
+      console.log(`Value of the input field is: ${inputDOM.value}`);
+      inputDOM.value = ''; // Reset the input field.
+    };
 
-  // Handles success by adding the MediaStream to the video element.
-  function gotLocalMediaStream(mediaStream) {
-    localStream = mediaStream;
-    localVideo.srcObject = mediaStream;
-    trace('videokuva liitetty paikalliseen videotagiin');
+    // Handles success by adding the MediaStream to the video element.
+    function gotLocalMediaStream(mediaStream) {
+      localStream = mediaStream;
+      localVideo.srcObject = mediaStream;
+      trace('videokuva liitetty paikalliseen videotagiin');
 
-    mediaStream.getTracks().forEach(track => {
-      pc.addTrack(track, mediaStream); // This returns a RTCRtpSender object
-      console.log(pc, 'sisällä');
-      console.log(pc.getLocalStreams()); // 191007klo1120 This returns the mediastreams which is connected pc.
+      mediaStream.getTracks().forEach(track => {
+        pc.addTrack(track, mediaStream); // This returns a RTCRtpSender object
+        console.log(pc, 'sisällä');
+        console.log(pc.getLocalStreams()); // 191007klo1120 This returns the mediastreams which is connected pc.
 
-    });
-
-    console.log(pc, 'ulkona');
-  }
-
-  // Handles error by logging a message to the console with the error message.
-  function handleLocalMediaStreamError(error) {
-    console.log('navigator.getUserMedia error: ', error);
-  }
-
-  // TÄTÄ FUNKTIOTA EI OLE VIELÄ KUTSUTTU KERTAAKAAN
-  function handleConnection(event) {
-    const peerConnection = event.target;
-    const iceCandidate = event.candidate;
-
-    if (iceCandidate) {
-      const newIceCandidate = new RTCIceCandidate(iceCandidate);
-      console.log(newIceCandidate, '#FROM LINE 207');
-      const otherPeer = getOtherPeer(peerConnection);
-
-      otherPeer.addIceCandidate(newIceCandidate).then(() => {
-        handleConnectionSuccess(peerConnection);
-      }).catch((error) => {
-        handleConnectionFailure(peerConnection, error);
       });
 
-      trace(`${getPeerName(peerConnection)} ICE candidate:\n` +
-          `${event.candidate.candidate}.`);
+      console.log(pc, 'ulkona');
     }
-  }
 
-  // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    // Handles error by logging a message to the console with the error message.
+    function handleLocalMediaStreamError(error) {
+      console.log('navigator.getUserMedia error: ', error);
+    }
 
-  /*
-          pc.ontrack = function (event) {
-              console.log('bfshgkjdfhgkjdfhgkjsdhfkjhdfjhdhfjhfsdhfs');
+    // TÄTÄ FUNKTIOTA EI OLE VIELÄ KUTSUTTU KERTAAKAAN
+    function handleConnection(event) {
+      const peerConnection = event.target;
+      const iceCandidate = event.candidate;
 
-          };
-  */
+      if (iceCandidate) {
+        const newIceCandidate = new RTCIceCandidate(iceCandidate);
+        console.log(newIceCandidate, '#FROM LINE 207');
+        const otherPeer = getOtherPeer(peerConnection);
+
+        otherPeer.addIceCandidate(newIceCandidate).then(() => {
+          handleConnectionSuccess(peerConnection);
+        }).catch((error) => {
+          handleConnectionFailure(peerConnection, error);
+        });
+
+        trace(`${getPeerName(peerConnection)} ICE candidate:\n` +
+          `${event.candidate.candidate}.`);
+      }
+    }
+
+    // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+    /*
+            pc.ontrack = function (event) {
+                console.log('bfshgkjdfhgkjdfhgkjsdhfkjhdfjhdhfjhfsdhfs');
+  
+            };
+    */
 
 
-  // >>>>>>>>>> EVENT HANDLERS >>>>>>>>>>
-  //pc.addEventListener('iceconnectionstatechange', handleConnectionChange); // EI VIELÄ TESTATTU
-  //pc.addEventListener('icecandidate', handleConnection); // EI VIELÄ TESTATTU
-  formDOM.addEventListener('submit', submitFunc);
+    // >>>>>>>>>> EVENT HANDLERS >>>>>>>>>>
+    //pc.addEventListener('iceconnectionstatechange', handleConnectionChange); // EI VIELÄ TESTATTU
+    //pc.addEventListener('icecandidate', handleConnection); // EI VIELÄ TESTATTU
+    formDOM.addEventListener('submit', submitFunc);
   // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-</script>
+  </script>
 
 </body>
 
